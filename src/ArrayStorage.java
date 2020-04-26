@@ -1,4 +1,3 @@
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -28,6 +27,7 @@ public class ArrayStorage {
         for (int i = 0; i < size; i++) {
             storage[i] = null;
         }
+        size = 0;
     }
 
     void save(Resume r) {
@@ -56,6 +56,7 @@ public class ArrayStorage {
     private void ensureCapacity() {
         int newCapacity = capacity + (capacity >> 1);
         storage = Arrays.copyOf(storage, newCapacity);
+        capacity = newCapacity;
     }
 
     Resume get(String uuid) {
@@ -78,6 +79,17 @@ public class ArrayStorage {
     }
 
     void delete(String uuid) {
+        int requiredIndex = indexOf(uuid);
+        if (requiredIndex != -1) {
+            if (requiredIndex == size - 1) {
+                storage[requiredIndex] = null;
+            } else {
+                System.arraycopy(storage, requiredIndex + 1, storage, requiredIndex,
+                        size - requiredIndex - 1);
+                storage[size - 1] = null;
+            }
+            size--;
+        }
     }
 
     /**
@@ -88,7 +100,7 @@ public class ArrayStorage {
     }
 
     int size() {
-        return 0;
+        return size;
     }
 
 }
