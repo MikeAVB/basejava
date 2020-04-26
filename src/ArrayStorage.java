@@ -43,13 +43,38 @@ public class ArrayStorage {
         }
     }
 
+    private int indexOf(Resume r) {
+        Objects.requireNonNull(r);
+        for (int i = 0; i < size; i++) {
+            if (r == storage[i] || storage[i].uuid.equals(r.uuid)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
     private void ensureCapacity() {
         int newCapacity = capacity + (capacity >> 1);
         storage = Arrays.copyOf(storage, newCapacity);
     }
 
     Resume get(String uuid) {
-        return null;
+        int requiredIndex = indexOf(uuid);
+        if (requiredIndex == -1) {
+            return null;
+        } else {
+            return storage[requiredIndex];
+        }
+    }
+
+    private int indexOf(String uuid) {
+        Objects.requireNonNull(uuid);
+        for (int i = 0; i < size; i++) {
+            if (uuid.equals(storage[i].uuid)) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     void delete(String uuid) {
@@ -64,16 +89,6 @@ public class ArrayStorage {
 
     int size() {
         return 0;
-    }
-
-    private int indexOf(Resume r) {
-        Objects.requireNonNull(r);
-        for (int i = 0; i < size; i++) {
-            if (r == storage[i] || storage[i].uuid.equals(r.uuid)) {
-                return i;
-            }
-        }
-        return -1;
     }
 
 }
