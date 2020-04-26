@@ -1,10 +1,30 @@
+import java.util.Objects;
+
 /**
  * Array based storage for Resumes
  */
 public class ArrayStorage {
-    Resume[] storage = new Resume[10000];
+    private static final int DEFAULT_CAPACITY = 10_000;
+    private Resume[] storage;
+    private int capacity;
+    private int size;
 
-    void clear() {
+    public ArrayStorage() {
+        this.capacity = DEFAULT_CAPACITY;
+        this.storage = new Resume[DEFAULT_CAPACITY];
+        this.size = 0;
+    }
+
+    public ArrayStorage(int capacity) {
+        this.capacity = capacity;
+        this.storage = new Resume[capacity];
+        this.size = 0;
+    }
+
+    public void clear() {
+        for (int i = 0; i < size; i++) {
+            storage[i] = null;
+        }
     }
 
     void save(Resume r) {
@@ -27,4 +47,15 @@ public class ArrayStorage {
     int size() {
         return 0;
     }
+
+    private int indexOf(Resume r) {
+        Objects.requireNonNull(r);
+        for (int i = 0; i < size; i++) {
+            if (storage[i].uuid.equals(r.uuid)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
 }
