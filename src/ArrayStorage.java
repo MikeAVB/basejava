@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Objects;
 
 /**
@@ -5,6 +7,7 @@ import java.util.Objects;
  */
 public class ArrayStorage {
     private static final int DEFAULT_CAPACITY = 10_000;
+
     private Resume[] storage;
     private int capacity;
     private int size;
@@ -28,6 +31,21 @@ public class ArrayStorage {
     }
 
     void save(Resume r) {
+        int existingIndex = indexOf(r);
+        if (existingIndex != -1) {
+            storage[existingIndex] = r;
+        } else {
+            if (size == capacity) {
+                ensureCapacity();
+                storage[size] = r;
+                size++;
+            }
+        }
+    }
+
+    private void ensureCapacity() {
+        int newCapacity = capacity + (capacity >> 1);
+        storage = Arrays.copyOf(storage, newCapacity);
     }
 
     Resume get(String uuid) {
@@ -51,7 +69,7 @@ public class ArrayStorage {
     private int indexOf(Resume r) {
         Objects.requireNonNull(r);
         for (int i = 0; i < size; i++) {
-            if (storage[i].uuid.equals(r.uuid)) {
+            if (r == storage[i] || storage[i].uuid.equals(r.uuid)) {
                 return i;
             }
         }
