@@ -30,16 +30,16 @@ public class ArrayStorage {
         size = 0;
     }
 
-    void save(Resume r) {
+    public void save(Resume r) {
         int existingIndex = indexOf(r);
         if (existingIndex != -1) {
             storage[existingIndex] = r;
         } else {
             if (size == capacity) {
                 ensureCapacity();
-                storage[size] = r;
-                size++;
             }
+            storage[size] = r;
+            size++;
         }
     }
 
@@ -59,7 +59,7 @@ public class ArrayStorage {
         capacity = newCapacity;
     }
 
-    Resume get(String uuid) {
+    public Resume get(String uuid) {
         int requiredIndex = indexOf(uuid);
         if (requiredIndex == -1) {
             return null;
@@ -78,7 +78,7 @@ public class ArrayStorage {
         return -1;
     }
 
-    void delete(String uuid) {
+    public void delete(String uuid) {
         int requiredIndex = indexOf(uuid);
         if (requiredIndex != -1) {
             if (requiredIndex == size - 1) {
@@ -95,8 +95,8 @@ public class ArrayStorage {
     /**
      * @return array, contains only Resumes in storage (without null)
      */
-    Resume[] getAll() {
-        return new Resume[0];
+    public Resume[] getAll() {
+        return Arrays.copyOf(storage, size);
     }
 
     int size() {
