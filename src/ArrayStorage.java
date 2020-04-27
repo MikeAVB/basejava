@@ -7,16 +7,11 @@ import java.util.Objects;
 public class ArrayStorage {
     private static final int DEFAULT_CAPACITY = 10_000;
 
-    private Resume[] storage;
+    private final Resume[] storage;
     private int size;
 
     public ArrayStorage() {
         this.storage = new Resume[DEFAULT_CAPACITY];
-        this.size = 0;
-    }
-
-    public ArrayStorage(int capacity) {
-        this.storage = new Resume[capacity];
         this.size = 0;
     }
 
@@ -29,21 +24,12 @@ public class ArrayStorage {
 
     public void save(Resume r) {
         Objects.requireNonNull(r);
-        int existingIndex = indexOf(r.uuid);
-        if (existingIndex != -1) {
-            storage[existingIndex] = r;
+        int index = indexOf(r.uuid);
+        if (index != -1) {
+            storage[index] = r;
         } else {
-            ensureCapacity(size + 1);
             storage[size] = r;
             size++;
-        }
-    }
-
-    private void ensureCapacity(int requiredCapacity) {
-        if (requiredCapacity > storage.length) {
-            int oldCapacity = storage.length;
-            int newCapacity = oldCapacity + (oldCapacity >> 1);
-            storage = Arrays.copyOf(storage, newCapacity);
         }
     }
 
@@ -66,11 +52,11 @@ public class ArrayStorage {
     }
 
     public void delete(String uuid) {
-        int requiredIndex = indexOf(uuid);
-        if (requiredIndex != -1) {
-            if (requiredIndex < size - 1) {
-                System.arraycopy(storage, requiredIndex + 1, storage, requiredIndex,
-                        size - requiredIndex - 1);
+        int index = indexOf(uuid);
+        if (index != -1) {
+            if (index < size - 1) {
+                System.arraycopy(storage, index + 1, storage, index,
+                        size - index - 1);
             }
             storage[size - 1] = null;
             size--;
