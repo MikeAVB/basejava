@@ -1,3 +1,7 @@
+package ru.topjava.basejava.storage;
+
+import ru.topjava.basejava.model.Resume;
+
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -16,35 +20,49 @@ public class ArrayStorage {
     }
 
     public void clear() {
-        for (int i = 0; i < size; i++) {
-            storage[i] = null;
-        }
+        Arrays.fill(storage, 0, size, null);
         size = 0;
     }
 
     public void save(Resume r) {
         Objects.requireNonNull(r);
-        int index = indexOf(r.uuid);
+        int index = indexOf(r.getUuid());
+        if (index == -1) {
+            if (size < storage.length) {
+                storage[size] = r;
+                size++;
+            } else {
+                System.out.println("The storage is full");
+            }
+        } else {
+            System.out.printf("Resume with id: \"%s\" already exists in the storage!\n",
+                    r.getUuid());
+        }
+    }
+
+    public void update(Resume r) {
+        Objects.requireNonNull(r);
+        int index = indexOf(r.getUuid());
         if (index != -1) {
             storage[index] = r;
         } else {
-            storage[size] = r;
-            size++;
+            System.out.printf("Resume with id: \"%s\" does not exists in the storage!\n",
+                    r.getUuid());
         }
     }
 
     public Resume get(String uuid) {
-        int requiredIndex = indexOf(uuid);
-        if (requiredIndex == -1) {
-            return null;
+        int index = indexOf(uuid);
+        if (index != -1) {
+            return storage[index];
         }
-        return storage[requiredIndex];
+        return null;
     }
 
     private int indexOf(String uuid) {
         Objects.requireNonNull(uuid);
         for (int i = 0; i < size; i++) {
-            if (uuid.equals(storage[i].uuid)) {
+            if (uuid.equals(storage[i].getUuid())) {
                 return i;
             }
         }
@@ -60,6 +78,9 @@ public class ArrayStorage {
             }
             storage[size - 1] = null;
             size--;
+        } else {
+            System.out.printf("Resume with id: \"%s\" does not exists in the storage!\n",
+                    uuid);
         }
     }
 
@@ -70,7 +91,7 @@ public class ArrayStorage {
         return Arrays.copyOf(storage, size);
     }
 
-    int size() {
+    public int size() {
         return size;
     }
 
