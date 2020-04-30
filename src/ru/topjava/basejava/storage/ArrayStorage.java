@@ -15,8 +15,7 @@ public class ArrayStorage {
     private int size;
 
     public ArrayStorage() {
-        this.storage = new Resume[DEFAULT_CAPACITY];
-        this.size = 0;
+        storage = new Resume[DEFAULT_CAPACITY];
     }
 
     public void clear() {
@@ -56,6 +55,7 @@ public class ArrayStorage {
         if (index != -1) {
             return storage[index];
         }
+        System.out.printf("Resume with id: \"%s\" was not found in the storage!\n", uuid);
         return null;
     }
 
