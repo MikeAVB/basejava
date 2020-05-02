@@ -2,27 +2,12 @@ package ru.topjava.basejava.storage;
 
 import ru.topjava.basejava.model.Resume;
 
-import java.util.Arrays;
 import java.util.Objects;
 
 /**
  * Array based storage for Resumes
  */
-public class ArrayResumeStorage implements ResumeStorage {
-    private static final int DEFAULT_CAPACITY = 10_000;
-
-    private final Resume[] storage;
-    private int size;
-
-    public ArrayResumeStorage() {
-        storage = new Resume[DEFAULT_CAPACITY];
-    }
-
-    @Override
-    public void clear() {
-        Arrays.fill(storage, 0, size, null);
-        size = 0;
-    }
+public class ArrayResumeStorage extends AbstractArrayResumeStorage {
 
     @Override
     public void save(Resume r) {
@@ -63,16 +48,6 @@ public class ArrayResumeStorage implements ResumeStorage {
         return null;
     }
 
-    private int indexOf(String uuid) {
-        Objects.requireNonNull(uuid);
-        for (int i = 0; i < size; i++) {
-            if (uuid.equals(storage[i].getUuid())) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
     @Override
     public void delete(String uuid) {
         int index = indexOf(uuid);
@@ -89,17 +64,14 @@ public class ArrayResumeStorage implements ResumeStorage {
         }
     }
 
-    /**
-     * @return array, contains only Resumes in storage (without null)
-     */
-    @Override
-    public Resume[] getAll() {
-        return Arrays.copyOf(storage, size);
-    }
-
-    @Override
-    public int size() {
-        return size;
+    private int indexOf(String uuid) {
+        Objects.requireNonNull(uuid);
+        for (int i = 0; i < size; i++) {
+            if (uuid.equals(storage[i].getUuid())) {
+                return i;
+            }
+        }
+        return -1;
     }
 
 }
