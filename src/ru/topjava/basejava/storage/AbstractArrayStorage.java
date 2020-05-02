@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.Objects;
 
 public abstract class AbstractArrayStorage implements Storage {
+
     protected static final int DEFAULT_CAPACITY = 10_000;
     protected final Resume[] storage;
     protected int size;
@@ -34,7 +35,6 @@ public abstract class AbstractArrayStorage implements Storage {
                     r.getUuid());
         }
     }
-
 
     @Override
     public void update(Resume r) {
@@ -74,7 +74,6 @@ public abstract class AbstractArrayStorage implements Storage {
         }
     }
 
-
     @Override
     public void clear() {
         Arrays.fill(storage, 0, size, null);
@@ -93,4 +92,5 @@ public abstract class AbstractArrayStorage implements Storage {
     public int size() {
         return size;
     }
+
 }
