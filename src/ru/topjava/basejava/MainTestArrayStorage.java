@@ -1,13 +1,14 @@
 package ru.topjava.basejava;
 
 import ru.topjava.basejava.model.Resume;
-import ru.topjava.basejava.storage.ArrayStorage;
+import ru.topjava.basejava.storage.ArrayResumeStorage;
+import ru.topjava.basejava.storage.ResumeStorage;
 
 /**
  * Test for your ArrayStorage implementation
  */
 public class MainTestArrayStorage {
-    static final ArrayStorage ARRAY_STORAGE = new ArrayStorage();
+    static final ResumeStorage ARRAY_STORAGE = new ArrayResumeStorage();
 
     public static void main(String[] args) {
         Resume r1 = new Resume();
