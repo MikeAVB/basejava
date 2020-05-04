@@ -15,36 +15,34 @@ public abstract class AbstractArrayStorage implements Storage {
         storage = new Resume[DEFAULT_CAPACITY];
     }
 
-    protected abstract void insertResume(Resume r);
+    protected abstract void saveToArray(Resume resume);
 
     protected abstract int indexOf(String uuid);
 
+    protected abstract void deleteFromArray(int index);
+
     @Override
-    public void save(Resume r) {
-        Objects.requireNonNull(r);
-        int index = indexOf(r.getUuid());
-        if (index < 0) {
-            if (size < storage.length) {
-                insertResume(r);
-                size++;
-            } else {
-                System.out.println("The storage is full");
-            }
+    public void save(Resume resume) {
+        Objects.requireNonNull(resume);
+        int index = indexOf(resume.getUuid());
+        if (index >= 0) {
+            System.out.printf("Resume with id: \"%s\" already exists in the storage!\n", resume.getUuid());
+        } else if (size == storage.length) {
+            System.out.println("The storage is full");
         } else {
-            System.out.printf("Resume with id: \"%s\" already exists in the storage!\n",
-                    r.getUuid());
+            saveToArray(resume);
+            size++;
         }
     }
 
     @Override
-    public void update(Resume r) {
-        Objects.requireNonNull(r);
-        int index = indexOf(r.getUuid());
-        if (index >= 0) {
-            storage[index] = r;
+    public void update(Resume resume) {
+        Objects.requireNonNull(resume);
+        int index = indexOf(resume.getUuid());
+        if (index < 0) {
+            System.out.printf("Resume with id: \"%s\" does not exists in the storage!\n", resume.getUuid());
         } else {
-            System.out.printf("Resume with id: \"%s\" does not exists in the storage!\n",
-                    r.getUuid());
+            storage[index] = resume;
         }
     }
 
@@ -61,16 +59,13 @@ public abstract class AbstractArrayStorage implements Storage {
     @Override
     public void delete(String uuid) {
         int index = indexOf(uuid);
-        if (index >= 0) {
-            if (index < size - 1) {
-                System.arraycopy(storage, index + 1, storage, index,
-                        size - index - 1);
-            }
-            storage[size - 1] = null;
-            size--;
+        if (index < 0) {
+            System.out.printf("Resume with id: \"%s\" does not exists in the storage!\n", uuid);
+        } else if (index == size - 1) {
+            storage[--size] = null;
         } else {
-            System.out.printf("Resume with id: \"%s\" does not exists in the storage!\n",
-                    uuid);
+            deleteFromArray(index);
+            size--;
         }
     }
 

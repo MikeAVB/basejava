@@ -8,13 +8,12 @@ import java.util.Objects;
 public class SortedArrayStorage extends AbstractArrayStorage {
 
     @Override
-    protected void insertResume(Resume r) {
-        int insertionPoint = -Arrays.binarySearch(storage, 0, size, r) - 1;
+    protected void saveToArray(Resume resume) {
+        int insertionPoint = -Arrays.binarySearch(storage, 0, size, resume) - 1;
         if (insertionPoint < size) {
-            System.arraycopy(storage, insertionPoint, storage, insertionPoint + 1,
-                    size - insertionPoint);
+            System.arraycopy(storage, insertionPoint, storage, insertionPoint + 1, size - insertionPoint);
         }
-        storage[insertionPoint] = r;
+        storage[insertionPoint] = resume;
     }
 
     @Override
@@ -22,6 +21,12 @@ public class SortedArrayStorage extends AbstractArrayStorage {
         Objects.requireNonNull(uuid);
         Resume searchKey = new Resume(uuid);
         return Arrays.binarySearch(storage, 0, size, searchKey);
+    }
+
+    @Override
+    protected void deleteFromArray(int index) {
+        System.arraycopy(storage, index + 1, storage, index, size - index - 1);
+        storage[size - 1] = null;
     }
 
 }
