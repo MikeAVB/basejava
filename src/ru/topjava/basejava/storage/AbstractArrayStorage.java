@@ -15,7 +15,7 @@ public abstract class AbstractArrayStorage implements Storage {
         storage = new Resume[DEFAULT_CAPACITY];
     }
 
-    protected abstract void saveToArray(Resume resume);
+    protected abstract void saveToArray(int index, Resume resume);
 
     protected abstract int indexOf(String uuid);
 
@@ -30,7 +30,7 @@ public abstract class AbstractArrayStorage implements Storage {
         } else if (size == storage.length) {
             System.out.println("The storage is full");
         } else {
-            saveToArray(resume);
+            saveToArray(index, resume);
             size++;
         }
     }
@@ -61,11 +61,11 @@ public abstract class AbstractArrayStorage implements Storage {
         int index = indexOf(uuid);
         if (index < 0) {
             System.out.printf("Resume with id: \"%s\" does not exists in the storage!\n", uuid);
-        } else if (index == size - 1) {
-            storage[--size] = null;
         } else {
-            deleteFromArray(index);
-            size--;
+            if (index < size - 1) {
+                deleteFromArray(index);
+            }
+            storage[--size] = null;
         }
     }
 
