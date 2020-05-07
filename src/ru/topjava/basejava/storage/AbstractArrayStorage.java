@@ -10,7 +10,7 @@ import java.util.Objects;
 
 public abstract class AbstractArrayStorage implements Storage {
 
-    protected static final int DEFAULT_CAPACITY = 10_000;
+    protected static final int DEFAULT_CAPACITY = 10;
     protected final Resume[] storage;
     protected int size;
 
