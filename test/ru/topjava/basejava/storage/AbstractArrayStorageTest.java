@@ -21,6 +21,7 @@ class AbstractArrayStorageTest {
     private static final Resume NONEXISTENT_RESUME = new Resume(NONEXISTENT_UUID);
 
     private static final Resume[] EMPTY_RESUME_ARRAY = new Resume[0];
+    private static final Resume[] TEST_RESUME_ARRAY = new Resume[]{RESUME_TEST_1, RESUME_TEST_2, RESUME_TEST_3};
 
     private static final int INITIAL_TEST_SIZE = 3;
 
@@ -59,11 +60,12 @@ class AbstractArrayStorageTest {
         @Test
         @DisplayName("when the resume exists in storage")
         void updateAnExistingResume() {
-            //TODO think about it better. Something wrong, i feel))
-            storage.update(new Resume(RESUME_TEST_1.getUuid()));
-            assertNotSame(RESUME_TEST_1, storage.get(RESUME_TEST_1.getUuid()),
+            Resume newResume = new Resume(RESUME_TEST_1.getUuid());
+            storage.update(newResume);
+            assertSame(newResume, storage.get(RESUME_TEST_1.getUuid()),
                     "should replace existing resume with a new one ");
         }
+
     }
 
     @Nested
@@ -90,6 +92,7 @@ class AbstractArrayStorageTest {
             assertThrows(NotExistStorageException.class, () -> storage.get(NONEXISTENT_UUID),
                     "should throw NotExistStorageException");
         }
+
     }
 
     @Nested
@@ -99,9 +102,8 @@ class AbstractArrayStorageTest {
         @Test
         @DisplayName("when storage isn't empty")
         void getAllNotEmpty() {
-            Resume[] getAllTestArray = new Resume[]{RESUME_TEST_1, RESUME_TEST_2, RESUME_TEST_3};
-            assertArrayEquals(getAllTestArray, storage.getAll(),
-                    () -> "should return array: " + Arrays.toString(getAllTestArray));
+            assertArrayEquals(TEST_RESUME_ARRAY, storage.getAll(),
+                    () -> "should return array: " + Arrays.toString(TEST_RESUME_ARRAY));
         }
 
         @Test
@@ -111,6 +113,7 @@ class AbstractArrayStorageTest {
             assertArrayEquals(EMPTY_RESUME_ARRAY, storage.getAll(),
                     "should return an empty Resume array");
         }
+
     }
 
 
@@ -161,6 +164,7 @@ class AbstractArrayStorageTest {
                 storage.save(new Resume());
             }
         }
+
     }
 
     @Nested
@@ -171,9 +175,9 @@ class AbstractArrayStorageTest {
         @DisplayName("when the resume exists in storage")
         void deleteAnExistingResume() {
             storage.delete(RESUME_TEST_1.getUuid());
-            assertSame(INITIAL_TEST_SIZE - 1, storage.size());
+            assertSame(INITIAL_TEST_SIZE - 1, storage.size(), "should decrease the size by 1");
             assertThrows(NotExistStorageException.class, () -> storage.get(RESUME_TEST_1.getUuid()),
-                    "should remove the resume from array and decrease the size by 1");
+                    "should remove the resume from array");
         }
 
         @Test
@@ -189,6 +193,7 @@ class AbstractArrayStorageTest {
             assertThrows(NotExistStorageException.class, () -> storage.delete(NONEXISTENT_UUID),
                     "should throw NotExistStorageException");
         }
+
     }
 
     @Nested
@@ -208,13 +213,6 @@ class AbstractArrayStorageTest {
             }
         }
 
-        @Test
-        @DisplayName("when the storage is empty")
-        void clearEmpty() {
-            storage.clear();
-            int size = storage.size();
-            assertSame(0, size, "shouldn't change the size");
-        }
     }
 
     @Nested
