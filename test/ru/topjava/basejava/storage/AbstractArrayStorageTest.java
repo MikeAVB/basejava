@@ -10,9 +10,8 @@ import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@Disabled("This is an abstract class")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class AbstractArrayStorageTest {
+abstract class AbstractArrayStorageTest {
     private static final Resume RESUME_TEST_1 = new Resume("RESUME_TEST_1");
     private static final Resume RESUME_TEST_2 = new Resume("RESUME_TEST_2");
     private static final Resume RESUME_TEST_3 = new Resume("RESUME_TEST_3");
@@ -20,12 +19,11 @@ class AbstractArrayStorageTest {
     private static final String NONEXISTENT_UUID = "[nonexistent]";
     private static final Resume NONEXISTENT_RESUME = new Resume(NONEXISTENT_UUID);
 
-    private static final Resume[] EMPTY_RESUME_ARRAY = new Resume[0];
     private static final Resume[] TEST_RESUME_ARRAY = new Resume[]{RESUME_TEST_1, RESUME_TEST_2, RESUME_TEST_3};
 
     private static final int INITIAL_TEST_SIZE = 3;
 
-    private final AbstractArrayStorage storage;
+    private final Storage storage;
 
     public AbstractArrayStorageTest(AbstractArrayStorage storage) {
         this.storage = storage;
@@ -52,7 +50,7 @@ class AbstractArrayStorageTest {
 
         @Test
         @DisplayName("when the resume doesn't exist in storage")
-        void deleteNotExistingResume() {
+        void updateNotExistingResume() {
             assertThrows(NotExistStorageException.class, () -> storage.update(NONEXISTENT_RESUME),
                     "should throw NotExistStorageException");
         }
@@ -88,7 +86,7 @@ class AbstractArrayStorageTest {
 
         @Test
         @DisplayName("when the resume doesn't exist in storage")
-        void deleteNotExistingResume() {
+        void getNotExistingResume() {
             assertThrows(NotExistStorageException.class, () -> storage.get(NONEXISTENT_UUID),
                     "should throw NotExistStorageException");
         }
@@ -110,7 +108,7 @@ class AbstractArrayStorageTest {
         @DisplayName("when storage is empty")
         void getAllEmpty() {
             storage.clear();
-            assertArrayEquals(EMPTY_RESUME_ARRAY, storage.getAll(),
+            assertArrayEquals(new Resume[0], storage.getAll(),
                     "should return an empty Resume array");
         }
 
@@ -206,8 +204,10 @@ class AbstractArrayStorageTest {
             int size = storage.size();
             storage.clear();
             assertSame(0, storage.size(), "should reduce the size to 0");
+            //TODO very dubious solution :face_palm:
+            AbstractArrayStorage arrayStorage = (AbstractArrayStorage) storage;
             for (int i = 0; i < size; i++) {
-                if (storage.storage[i] != null) {
+                if (arrayStorage.storage[i] != null) {
                     fail("should reset all deleted elements to null");
                 }
             }
